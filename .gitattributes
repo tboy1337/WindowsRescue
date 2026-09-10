@@ -1,0 +1,30 @@
+# Detect text files and store LF in the repository. Working-tree
+# endings follow each path's eol rule below, not a local autocrlf setting.
+* text=auto
+
+# Windows shells treat LF-only batch/PowerShell files as a single line or
+# misparse the last command; keep CRLF on checkout on every OS.
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.ps1 text eol=crlf
+
+# POSIX shebang scripts break (and ShellCheck SC1017 fires) if a CR is present.
+*.sh text eol=lf
+
+# Cross-platform text; native endings on checkout via text=auto / core.eol.
+*.md text
+*.yml text
+*.yaml text
+.gitattributes text eol=lf
+.gitignore text eol=lf
+
+# Never run end-of-line conversion on these.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.ico binary
+*.exe binary
+*.zip binary
+*.7z binary

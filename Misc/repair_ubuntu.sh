@@ -31,22 +31,26 @@ write_log() {
 
 # Function to print colored output with timestamps
 print_status() {
-    local message="[$(date '+%Y-%m-%d %H:%M:%S')] [INFO] $1"
+    local message
+    message="[$(date '+%Y-%m-%d %H:%M:%S')] [INFO] $1"
     write_log "${BLUE}${message}${NC}"
 }
 
 print_success() {
-    local message="[$(date '+%Y-%m-%d %H:%M:%S')] [SUCCESS] $1"
+    local message
+    message="[$(date '+%Y-%m-%d %H:%M:%S')] [SUCCESS] $1"
     write_log "${GREEN}${message}${NC}"
 }
 
 print_warning() {
-    local message="[$(date '+%Y-%m-%d %H:%M:%S')] [WARNING] $1"
+    local message
+    message="[$(date '+%Y-%m-%d %H:%M:%S')] [WARNING] $1"
     write_log "${YELLOW}${message}${NC}"
 }
 
 print_error() {
-    local message="[$(date '+%Y-%m-%d %H:%M:%S')] [ERROR] $1"
+    local message
+    message="[$(date '+%Y-%m-%d %H:%M:%S')] [ERROR] $1"
     write_log "${RED}${message}${NC}"
 }
 
@@ -520,7 +524,7 @@ print_summary() {
 
 # Main execution function
 main() {
-    init_log
+    init_log "$@"
 
     echo "================================================"
     echo "Ubuntu System Integrity Check and Repair Script"
@@ -600,4 +604,4 @@ parse_args "$@"
 check_root
 
 # Run main function
-main
+main "$@"
