@@ -48,11 +48,9 @@ Here's a breakdown of the goodies:
 
 ### Utility & Organization Tools (in `./Misc/`)
 - **get_system_info.cmd**: Generate a detailed system report.
-- **organise_videos.ps1**: Organize .mp4 and .mkv files by creating individual folders for each video.
 - **print_queue_viewer.ps1**: View and manage print queues.
 - **repair_volumes.cmd**: Alternative repair all volumes on your system method.
 - **tts.cmd**: Text-to-Speech utility for fun or accessibility.
-- **unpack_archives.ps1**: Batch unpack archives (ZIP, RAR, etc.).
 
 ### Cross-Platform Tools (in `./Misc/`)
 - **repair_ubuntu.sh**: Comprehensive Ubuntu/Linux system repair and integrity check script.
@@ -84,7 +82,6 @@ Here's a breakdown of the goodies:
 - **Update all programs**: `update_windows_programs.cmd`
 - **Full Windows update**: `update_windows.ps1`
 - **Repair time service**: `repair_time_service.cmd`
-- **Organize video files**: `Misc/organise_videos.ps1`
 - **Repair Ubuntu system** (in WSL): `Misc/repair_ubuntu.sh`
 
 For detailed usage, check each script's comments.
