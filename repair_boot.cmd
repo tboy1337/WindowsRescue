@@ -2,7 +2,7 @@
 setlocal EnableExtensions EnableDelayedExpansion
 
 rem ============================================================================
-rem  repair_boot.cmd - Windows Recovery Environment repair helper, version 3.1
+rem  repair_boot.cmd - Windows Recovery Environment repair helper, version 3.0
 rem
 rem  Run from Windows RE (Troubleshoot, Advanced options, Command Prompt) or from
 rem  Windows installation media (Repair your computer, then Command Prompt).
@@ -1377,7 +1377,7 @@ endlocal
 exit /b 0
 
 :usage
-echo repair_boot.cmd v3.1 - Windows Recovery Environment repair helper
+echo repair_boot.cmd v3.0 - Windows Recovery Environment repair helper
 echo.
 echo Usage: run it from Windows RE or Windows PE command prompt, no arguments.
 echo   repair_boot.cmd
