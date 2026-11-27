@@ -134,17 +134,17 @@ function Update-StoreAppViaWinGet {
     Write-Host "Attempting to use Repair-WingetPackageManager..." -ForegroundColor Gray
 
     try {
-        # Check if Microsoft.WinGet.Client module is available
-        $WinGetModule = Get-Module -ListAvailable -Name "Microsoft.WinGet.Client" -ErrorAction SilentlyContinue
+        # Ensure the latest Microsoft.WinGet.Client module is installed
+        $WinGetModules = @(Get-Module -ListAvailable -Name "Microsoft.WinGet.Client" -ErrorAction SilentlyContinue | Sort-Object Version -Descending)
+        $LatestWinGetModule = Find-Module -Name "Microsoft.WinGet.Client" -Repository PSGallery -ErrorAction Stop
 
-        if (-not $WinGetModule) {
-            Write-Host "Installing Microsoft.WinGet.Client module..." -ForegroundColor Gray
+        if ($WinGetModules.Count -eq 0 -or $WinGetModules[0].Version -lt $LatestWinGetModule.Version) {
+            Write-Host "Installing Microsoft.WinGet.Client version $($LatestWinGetModule.Version)..." -ForegroundColor Gray
             Install-Module -Name Microsoft.WinGet.Client -Force -AllowClobber -Scope CurrentUser -ErrorAction Stop
-            Import-Module -Name Microsoft.WinGet.Client -ErrorAction Stop
         } else {
-            Write-Host "Microsoft.WinGet.Client module found, importing..." -ForegroundColor Gray
-            Import-Module -Name Microsoft.WinGet.Client -ErrorAction Stop
+            Write-Host "Microsoft.WinGet.Client module is up to date (version $($WinGetModules[0].Version))." -ForegroundColor Gray
         }
+        Import-Module -Name Microsoft.WinGet.Client -ErrorAction Stop
 
         # Repair WinGet package manager to ensure it's up to date
         Write-Host "Repairing WinGet package manager..." -ForegroundColor Gray

@@ -83,33 +83,49 @@ function Show-RestartCountdown {
     return $true
 }
 
-# Function to install PSWindowsUpdate module if not present
+# Function to install or update the PSWindowsUpdate module
 function Install-WindowsUpdateModule {
     Write-Host "Checking for PSWindowsUpdate module..." -ForegroundColor Cyan
 
-    if (-not (Get-Module -ListAvailable -Name PSWindowsUpdate)) {
+    $InstalledModules = @(Get-Module -ListAvailable -Name PSWindowsUpdate | Sort-Object Version -Descending)
+    if ($InstalledModules.Count -eq 0) {
         Write-Host "PSWindowsUpdate module not found. Installing..." -ForegroundColor Yellow
-
         try {
-            # Install NuGet provider first (required for module installation)
             Write-Host "Installing NuGet provider..." -ForegroundColor Cyan
             Install-PackageProvider -Name NuGet -Force -Scope AllUsers -Confirm:$false | Out-Null
-
-            # Set PSGallery as trusted repository to avoid prompts
             Write-Host "Setting PSGallery as trusted repository..." -ForegroundColor Cyan
             Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
-
-            # Install the PSWindowsUpdate module
-            Write-Host "Installing PSWindowsUpdate module..." -ForegroundColor Cyan
-            Install-Module -Name PSWindowsUpdate -Force -AllowClobber -Scope AllUsers -Confirm:$false -SkipPublisherCheck
-            Write-Host "PSWindowsUpdate module installed successfully." -ForegroundColor Green
         }
         catch {
-            Write-Error "Failed to install PSWindowsUpdate module: $_"
+            Write-Error "Failed to prepare PSWindowsUpdate module installation: $_"
+            exit 1
+        }
+    }
+
+    try {
+        $LatestModule = Find-Module -Name PSWindowsUpdate -Repository PSGallery -ErrorAction Stop
+    }
+    catch {
+        if ($InstalledModules.Count -eq 0) {
+            Write-Error "Failed to find PSWindowsUpdate on PSGallery: $_"
+            exit 1
+        }
+        Write-Warning "Could not check PSGallery for a newer PSWindowsUpdate version. Using installed version $($InstalledModules[0].Version): $_"
+        $LatestModule = $InstalledModules[0]
+    }
+
+    if ($InstalledModules.Count -eq 0 -or $InstalledModules[0].Version -lt $LatestModule.Version) {
+        Write-Host "Installing PSWindowsUpdate version $($LatestModule.Version)..." -ForegroundColor Yellow
+        try {
+            Install-Module -Name PSWindowsUpdate -Force -AllowClobber -Scope AllUsers -Confirm:$false -SkipPublisherCheck -ErrorAction Stop
+            Write-Host "PSWindowsUpdate module installed or upgraded successfully." -ForegroundColor Green
+        }
+        catch {
+            Write-Error "Failed to install or upgrade PSWindowsUpdate module: $_"
             exit 1
         }
     } else {
-        Write-Host "PSWindowsUpdate module is already installed." -ForegroundColor Green
+        Write-Host "PSWindowsUpdate module is up to date (version $($InstalledModules[0].Version))." -ForegroundColor Green
     }
 
     # Import the module
